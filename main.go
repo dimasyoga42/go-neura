@@ -2,7 +2,7 @@ package main
 
 import (
 	lib "neura-go/src/lib"
-	Regis "neura-go/src/routes"
+	"neura-go/src/routes"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +14,8 @@ func main() {
 	c := cache.New(5*time.Minute, 10*time.Minute)
 
 	r := gin.Default()
-	r.GET("/regis", Regis.RegisHandler(db, c))
+
+	routes.Setup(r, db, c)
+
 	r.Run(":4000")
 }

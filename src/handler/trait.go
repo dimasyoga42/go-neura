@@ -1,4 +1,4 @@
-package Regis
+package regis
 
 import (
 	"encoding/json"
@@ -11,13 +11,11 @@ import (
 	"github.com/supabase-community/supabase-go"
 )
 
-
-func RegisHandler(db *supabase.Client, c *cache.Cache) gin.HandlerFunc {
+func TraitHandler(db *supabase.Client, c *cache.Cache) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		start := time.Now()
-
 		name := ctx.Query("name")
-		cacheKey := "regis:" + name
+		cacheKey := "trait:" + name
 
 		if cached, found := c.Get(cacheKey); found {
 			elapsed := time.Since(start)
@@ -29,22 +27,18 @@ func RegisHandler(db *supabase.Client, c *cache.Cache) gin.HandlerFunc {
 		}
 
 		data, _, err := db.
-			From("regist").
+			From("ablityv2").
 			Select("*", "", false).
 			Ilike("name", "%"+name+"%").
 			Execute()
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
-		var res []config.Regis
+		var res []config.Trait
 		if err := json.Unmarshal(data, &res); err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
