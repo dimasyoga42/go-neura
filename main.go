@@ -2,6 +2,7 @@ package main
 
 import (
 	lib "neura-go/src/lib"
+	"neura-go/src/middleware"
 	"neura-go/src/routes"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 )
 
 func main() {
+	go middleware.CleanupVisitors()
 	db := lib.Supabase()
 	c := cache.New(5*time.Minute, 10*time.Minute)
 

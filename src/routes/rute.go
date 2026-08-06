@@ -2,6 +2,7 @@ package routes
 
 import (
 	regis "neura-go/src/handler"
+	"neura-go/src/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/patrickmn/go-cache"
@@ -9,6 +10,7 @@ import (
 )
 
 func Setup(r *gin.Engine, db *supabase.Client, c *cache.Cache) {
+	r.Use(middleware.RateLimiter())
 	r.GET("/home", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{"message": "ini adalah Home"})
 	})

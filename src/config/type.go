@@ -15,7 +15,7 @@ type Regis struct {
 	Lv_stode  string `json:"levels_studied"`
 }
 type Trait struct {
-	Name string `json:"name"`
+	Name      string `json:"name"`
 	Deskripsi string `json:"stat_effect"`
 }
 type ApiRespon struct {
