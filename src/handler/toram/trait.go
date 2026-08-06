@@ -1,4 +1,4 @@
-package regis
+package neru
 
 import (
 	"encoding/json"

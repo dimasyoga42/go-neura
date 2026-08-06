@@ -1,7 +1,8 @@
 package routes
 
 import (
-	regis "neura-go/src/handler"
+	"neura-go/src/handler/etc"
+	neru "neura-go/src/handler/toram"
 	"neura-go/src/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,7 @@ func Setup(r *gin.Engine, db *supabase.Client, c *cache.Cache) {
 		ctx.JSON(200, gin.H{"message": "ini adalah Home"})
 	})
 
-	r.GET("etc/toram/regis", regis.RegisHandler(db, c))
-	r.GET("etc/toram/trait", regis.TraitHandler(db, c))
+	r.GET("etc/toram/regis", neru.RegisHandler(db, c))
+	r.GET("etc/toram/trait", neru.TraitHandler(db, c))
+	r.GET("etc/thumbnail", etc.TumbnailView(db))
 }
