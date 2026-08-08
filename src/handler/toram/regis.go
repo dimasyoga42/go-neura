@@ -15,6 +15,7 @@ func RegisHandler(db *supabase.Client, c *cache.Cache) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		start := time.Now()
 		name := ctx.Query("name")
+
 		cacheKey := "regis:" + name
 
 		if cached, found := c.Get(cacheKey); found {

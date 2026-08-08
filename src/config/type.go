@@ -22,3 +22,12 @@ type ApiRespon struct {
 	Data any     `json:"data"`
 	Time float64 `json:"response_time_ms"`
 }
+
+type Maid struct {
+	Image string `json:"image"`
+}
+
+type Error struct {
+	Message string
+	Status bool
+}

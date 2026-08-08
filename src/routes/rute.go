@@ -3,6 +3,7 @@ package routes
 import (
 	"neura-go/src/handler/etc"
 	neru "neura-go/src/handler/toram"
+	"neura-go/src/helper"
 	"neura-go/src/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -19,4 +20,6 @@ func Setup(r *gin.Engine, db *supabase.Client, c *cache.Cache) {
 	r.GET("etc/toram/regis", neru.RegisHandler(db, c))
 	r.GET("etc/toram/trait", neru.TraitHandler(db, c))
 	r.GET("etc/thumbnail", etc.TumbnailView(db))
+	r.GET("etc/mem", etc.CreateMem())
+	r.GET("etc/dye", helper.DyeView())
 }
