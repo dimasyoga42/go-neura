@@ -31,3 +31,8 @@ type Error struct {
 	Message string
 	Status bool
 }
+
+type Waifu struct {
+	Id int `json:"id"`
+	Link string `json:"Link"`
+}

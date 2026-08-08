@@ -22,4 +22,5 @@ func Setup(r *gin.Engine, db *supabase.Client, c *cache.Cache) {
 	r.GET("etc/thumbnail", etc.TumbnailView(db))
 	r.GET("etc/mem", etc.CreateMem())
 	r.GET("etc/dye", helper.DyeView())
+	r.GET("etc/waifu", etc.WaifuGacha(db))
 }
