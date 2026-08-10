@@ -2,10 +2,10 @@ package config
 
 type Xtal struct {
 	Name string `json:"name"`
-	Tipe string `json:"tipe"`
-	Stat string `json:"stat"`
-	Rute string `json:"rute"`
-	Max  string `json:"max"`
+	Tipe string `json:"type"`
+	Max_Upgrade string `json:"upgrade_route"`
+	Stat string `json:"stats"`
+	Max_Upgrade_Rute  string `json:"max_upgrade_route"`
 }
 
 type Regis struct {
