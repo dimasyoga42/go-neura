@@ -19,6 +19,7 @@ func Setup(r *gin.Engine, db *supabase.Client, c *cache.Cache) {
 
 	r.GET("etc/toram/regis", neru.RegisHandler(db, c))
 	r.GET("etc/toram/trait", neru.TraitHandler(db, c))
+	r.GET("etc/toram/xtal", neru.XtalHandler(db, c))
 	r.GET("etc/thumbnail", etc.TumbnailView(db))
 	r.GET("etc/mem", etc.CreateMem())
 	r.GET("etc/dye", helper.DyeView())
