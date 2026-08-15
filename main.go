@@ -6,9 +6,9 @@ import (
 	"neura-go/src/routes"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/patrickmn/go-cache"
-	"github.com/rs/cors"
 )
 
 func main() {
