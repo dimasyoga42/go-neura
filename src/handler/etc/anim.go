@@ -59,3 +59,21 @@ func AnimeEpisode() gin.HandlerFunc {
 		})
 	}
 }
+
+func AnimeSearch() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		v := ctx.Query("q")
+		data, err := helper.SearchAnimeHelper(v)
+		fmt.Println(data)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"data": data,
+		})
+	}
+}

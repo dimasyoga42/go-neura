@@ -133,6 +133,15 @@ func resolveOtakudesuStreamURL(client *http.Client, referer, dataContent, nonce 
 	return strings.TrimSpace(src), nil
 }
 
+type SearchResult struct {
+	Name      string   `json:"Name"`
+	Image_Url string   `json:"Image_Url"`
+	Link      string   `json:"Link"`
+	Genre     []string `json:"Genre"`
+	Status    string   `json:"Status"`
+	Rating    string   `json:"Rating"`
+}
+
 type Anime struct {
 	Name      string `json:"Name"`
 	Image_Url string `json:"Image_Url"`
@@ -226,6 +235,78 @@ func GetanimeHelper() ([]Anime, error) {
 	})
 
 	if err := c.Visit("https://otakudesu.blog/"); err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+// SearchAnimeHelper scraping halaman hasil pencarian otakudesu
+// (https://otakudesu.blog/?s=<keyword>&post_type=anime), mengembalikan
+// maksimal 12 hasil sesuai batas yang ditampilkan situs.
+func SearchAnimeHelper(keyword string) ([]SearchResult, error) {
+	c := colly.NewCollector(
+		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"),
+	)
+
+	c.SetRequestTimeout(90 * time.Second)
+
+	data := make([]SearchResult, 0)
+
+	c.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
+		r.Headers.Set("Accept-Language", "en-US,en;q=0.9")
+		r.Headers.Set("Referer", "https://otakudesu.blog/")
+	})
+
+	c.OnHTML("#venkonten .chivsrc li", func(h *colly.HTMLElement) {
+		name := strings.TrimSpace(h.ChildText("h2 a"))
+		link := strings.TrimSpace(h.ChildAttr("h2 a", "href"))
+		imageURL := h.ChildAttr("img", "src")
+
+		if name == "" || link == "" {
+			return
+		}
+
+		parsedURL, err := url.Parse(link)
+		if err != nil {
+			return
+		}
+
+		item := SearchResult{
+			Name:      name,
+			Image_Url: imageURL,
+			Link:      parsedURL.Path,
+			Genre:     make([]string, 0),
+		}
+
+		h.ForEach(".set", func(_ int, e *colly.HTMLElement) {
+			label := strings.ToLower(strings.TrimSpace(e.ChildText("b")))
+			value := strings.TrimSpace(e.Text)
+			value = strings.TrimSpace(strings.TrimPrefix(value, e.ChildText("b")))
+			value = strings.TrimSpace(strings.TrimPrefix(value, ":"))
+
+			switch label {
+			case "genres", "genre":
+				e.ForEach("a", func(_ int, a *colly.HTMLElement) {
+					genreName := strings.TrimSpace(a.Text)
+					if genreName != "" {
+						item.Genre = append(item.Genre, genreName)
+					}
+				})
+			case "status":
+				item.Status = value
+			case "rating":
+				item.Rating = value
+			}
+		})
+
+		data = append(data, item)
+	})
+
+	searchURL := "https://otakudesu.blog/?s=" + url.QueryEscape(keyword) + "&post_type=anime"
+
+	if err := c.Visit(searchURL); err != nil {
 		return nil, err
 	}
 
