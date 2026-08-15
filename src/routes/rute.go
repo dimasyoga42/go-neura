@@ -24,4 +24,7 @@ func Setup(r *gin.Engine, db *supabase.Client, c *cache.Cache) {
 	r.GET("etc/mem", etc.CreateMem())
 	r.GET("etc/dye", helper.DyeView())
 	r.GET("etc/waifu", etc.WaifuGacha(db))
+	r.GET("etc/anime", etc.Anime())
+	r.GET("etc/detailanime", etc.AnimeDetail())
+	r.GET("etc/epsanime", etc.AnimeEpisode())
 }
